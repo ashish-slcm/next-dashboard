@@ -45,12 +45,13 @@ export default function UserAuthForm() {
     startTransition(async () => {
       setError(null);
       try {
+        console.log('before');
         const res = await signIn('credentials', {
           email: data.email,
           password: data.password,
           redirect: false
         });
-
+        console.log('after');
         if (res?.ok) {
           const url = '/dashboard';
           router.push(url);

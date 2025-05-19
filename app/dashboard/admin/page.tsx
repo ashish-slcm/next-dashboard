@@ -1,5 +1,6 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import PageContainer from '@/components/layout/page-container';
+import UserCreateForm from '@/sections/admin/view/user-create-form';
 import React from 'react';
 
 export const metadata = {
@@ -17,7 +18,9 @@ export default function Page() {
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
 
-        <div className="flex items-start justify-between">Admin Page</div>
+        <div className="flex items-start justify-between">
+          <UserCreateForm />
+        </div>
       </div>
     </PageContainer>
   );

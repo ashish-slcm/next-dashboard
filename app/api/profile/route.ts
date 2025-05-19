@@ -2,25 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getToken } from 'next-auth/jwt';
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
-  const id = token.id;
 
-  if (!id || typeof id !== 'string') {
+  const id = parseInt(token.id as string, 10);
+
+  if (isNaN(id)) {
     return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
   }
 
   try {
     console.log('Fetching user with id:', id);
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findFirst({
       where: { id },
       select: {
         id: true,
@@ -28,7 +26,7 @@ export async function GET(
         email: true,
         mobile: true,
         createdAt: true,
-        updatedAt: true
+        role: true
       }
     });
 

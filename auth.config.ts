@@ -27,9 +27,11 @@ const authConfig = {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
+        console.log('Ashish');
+        const user = await prisma.users.findFirst({
           where: { email }
         });
+        console.log('Chaudhary');
 
         if (!user || !user.hashedPassword) {
           return null;
