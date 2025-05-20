@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { ToastAction } from '@radix-ui/react-toast';
 
 export default function UserCreateForm() {
   const [formData, setFormData] = useState({
@@ -17,11 +19,10 @@ export default function UserCreateForm() {
     camera_Master_Id: ''
   });
 
-  const [message, setMessage] = useState('');
+  const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     const parsedValue =
       name === 'active' || name === 'camera_Master_Id'
         ? parseInt(value)
@@ -42,7 +43,9 @@ export default function UserCreateForm() {
     const result = await res.json();
 
     if (res.ok) {
-      setMessage(`✅ User ${result.name} created successfully!`);
+      toast({
+        title: '✅ User created successfully!'
+      });
       setFormData({
         name: '',
         username: '',
@@ -54,7 +57,12 @@ export default function UserCreateForm() {
         camera_Master_Id: ''
       });
     } else {
-      setMessage(`❌ Error: ${result.error}`);
+      toast({
+        variant: 'destructive',
+        title: '❌ Error',
+        description: `${result.error}`,
+        action: <ToastAction altText="Try again">Try again</ToastAction>
+      });
     }
   };
 
@@ -64,7 +72,6 @@ export default function UserCreateForm() {
       className="mx-auto w-full max-w-2xl space-y-4 rounded-lg border p-6 shadow-md"
     >
       <h2 className="text-2xl font-semibold">Create New User</h2>
-      {message && <p className="mt-2 text-sm">{message}</p>}
       <div className="grid gap-1.5">
         <Label htmlFor="name">Name</Label>
         <Input
